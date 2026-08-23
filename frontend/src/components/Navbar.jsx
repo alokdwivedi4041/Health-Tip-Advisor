@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import "../styles/chat.css";
 
 function Navbar({ onNewChat }) {
   const navigate = useNavigate();
@@ -9,25 +10,15 @@ function Navbar({ onNewChat }) {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "10px 20px",
-        borderBottom: "1px solid #ccc",
-      }}
-    >
-      <h3>Health Tips Advisor</h3>
-
-      <div>
-        <button onClick={onNewChat} style={{ marginRight: "10px" }}>
+    <div className="chat-navbar">
+      <h3>
+        Health Tips <span>Advisor</span>
+      </h3>
+      <div className="chat-navbar-actions">
+        <button className="new-chat-btn" onClick={onNewChat}>
           + New Chat
         </button>
-
-        <button onClick={handleLogout}>
-          Logout
-        </button>
+        <button onClick={handleLogout}>Logout</button>
       </div>
     </div>
   );
