@@ -11,6 +11,7 @@ function Chat() {
   const [error, setError] = useState("");
   const [inputText, setInputText] = useState("");
   const [sending, setSending] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const navigate = useNavigate();
 
   // Load all sessions when the page first loads
@@ -35,10 +36,12 @@ function Chat() {
         setCurrentSessionId(response.data[0].id);
       } else {
         // No sessions yet — create the first one automatically
-        handleNewChat();
+        await handleNewChat();
       }
     } catch (err) {
       setError("Not authorized. Please login again.");
+    } finally {
+      setPageLoading(false);
     }
   };
 
@@ -120,6 +123,10 @@ function Chat() {
         <p style={{ color: "red" }}>{error}</p>
       </div>
     );
+  }
+
+  if (pageLoading) {
+    return <div style={{ margin: "50px" }}>Loading MindBot...</div>;
   }
 
   return (
