@@ -93,8 +93,8 @@ MindBot-Health-Advisor/
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/alokdwivedi4041/MindBot-Health-Advisor.git
-cd MindBot-Health-Advisor
+git clone https://github.com/alokdwivedi4041/Health-Tip-Advisor.git
+cd Health-Tip-Advisor
 ```
 
 ### 2. Database setup
