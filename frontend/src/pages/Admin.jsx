@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
+import "../styles/admin.css";
 
 function Admin() {
   const [stats, setStats] = useState(null);
@@ -31,13 +32,20 @@ function Admin() {
     }
   };
 
-  if (loading) return <p style={{ margin: "50px" }}>Loading admin data...</p>;
+  if (loading) {
+    return (
+      <div className="admin-page">
+        <Navbar onNewChat={() => {}} />
+        <p className="admin-loading">Loading admin data...</p>
+      </div>
+    );
+  }
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page">
         <Navbar onNewChat={() => {}} />
-        <p style={{ margin: "50px", color: "red" }}>{error}</p>
+        <p className="admin-error">{error}</p>
       </div>
     );
   }
@@ -46,66 +54,50 @@ function Admin() {
     { label: "Total Users", value: stats.total_users },
     { label: "Total Sessions", value: stats.total_sessions },
     { label: "Total Messages", value: stats.total_messages },
-    { label: "👍 Positive Feedback", value: stats.positive_feedback },
-    { label: "👎 Negative Feedback", value: stats.negative_feedback },
+    { label: "👍 Positive Feedback", value: stats.positive_feedback, cls: "positive" },
+    { label: "👎 Negative Feedback", value: stats.negative_feedback, cls: "negative" },
     { label: "Average Rating", value: stats.average_rating ?? "N/A" },
   ];
 
   return (
-    <div>
+    <div className="admin-page">
       <Navbar onNewChat={() => {}} />
 
-      <div style={{ padding: "20px" }}>
+      <div className="admin-content">
         <h2>Admin Analytics</h2>
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", marginBottom: "30px" }}>
+        <div className="admin-stats-grid">
           {statCards.map((card) => (
-            <div
-              key={card.label}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                padding: "16px",
-                minWidth: "150px",
-              }}
-            >
-              <div style={{ fontSize: "13px", color: "#666" }}>{card.label}</div>
-              <div style={{ fontSize: "24px", fontWeight: "bold" }}>{card.value}</div>
+            <div key={card.label} className={`admin-stat-card ${card.cls || ""}`}>
+              <div className="admin-stat-label">{card.label}</div>
+              <div className="admin-stat-value">{card.value}</div>
             </div>
           ))}
         </div>
 
         <h3>Common Topics</h3>
-
-        {topics.length === 0 ? (
-          <p>No topic data yet.</p>
-        ) : (
-          <table style={{ borderCollapse: "collapse", width: "100%", maxWidth: "500px" }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: "left", borderBottom: "1px solid #ccc", padding: "8px" }}>
-                  Topic
-                </th>
-                <th style={{ textAlign: "left", borderBottom: "1px solid #ccc", padding: "8px" }}>
-                  Count
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {topics.map((t) => (
-                <tr key={t.topic}>
-                  <td style={{ padding: "8px", borderBottom: "1px solid #eee" }}>
-                    {t.topic}
-                  </td>
-                  <td style={{ padding: "8px", borderBottom: "1px solid #eee" }}>
-                    {t.count}
-                  </td>
+        <div className="admin-table-wrap">
+          {topics.length === 0 ? (
+            <p style={{ color: "#7c8b9a", padding: "20px" }}>No topic data yet.</p>
+          ) : (
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Topic</th>
+                  <th>Count</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {topics.map((t) => (
+                  <tr key={t.topic}>
+                    <td>{t.topic}</td>
+                    <td>{t.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
     </div>
   );
