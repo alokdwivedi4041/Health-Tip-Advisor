@@ -180,7 +180,19 @@ The app was manually tested end-to-end via FastAPI's Swagger UI (backend) and th
 
 ## Screenshots
 
-_Add screenshots here: Login page, Chat with AI response, Quick replies, Feedback buttons, Admin dashboard._
+## Screenshots
+
+### Login Page
+![Login Page](screenshots/login.png)
+
+### Register Page
+![Register Page](screenshots/register.png)
+
+### Chat Interface
+![Chat Interface](screenshots/chat.png)
+
+### Admin Dashboard
+![Admin Dashboard](screenshots/admin.png)
 
 ---
 
