@@ -2,7 +2,7 @@
 
 MindBot is a full-stack web application that provides users with general health and wellness tips through an AI-powered chatbot. Users can register, log in, chat with the assistant, revisit past conversations, use quick-reply suggestions, and rate AI responses. An admin dashboard provides usage analytics.
 
-🔗 **Live Demo:** [Click here to open the live app](health-tip-advisor.vercel.app)
+🔗 **Live Demo:** [health-tip-advisor.vercel.app](https://health-tip-advisor.vercel.app)
 
 > **Note:** MindBot gives general educational health information only. It is **not** a diagnostic tool and does not replace professional medical advice.
 
