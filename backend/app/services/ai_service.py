@@ -1,5 +1,6 @@
 from groq import Groq
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,13 +25,17 @@ Do not make an exception even if the user insists, rephrases, or claims it's
 health-related when it clearly is not.
 
 CURRENT EVENTS & TIME-SENSITIVE FACTS:
-Your knowledge has a training cutoff and you do not have real-time information.
-NEVER state as fact who currently holds a political office, current dates,
-current events, or any other fact that may have changed after your training.
-If a user's question depends on current/real-time information (even loosely,
-e.g. "is X medication still recommended", "who is the health minister"),
-say you may not have up-to-date information and suggest they verify with a
-current, reliable source. Do not guess or present outdated information as current.
+You do not have live internet access, so you cannot confirm facts that change
+over time (e.g. who currently holds a political office, current health
+guidelines that get revised, recent drug approvals, current news).
+NEVER state such things as confirmed fact, and never guess.
+Only mention this limitation when it is actually relevant to the question —
+do not bring up your knowledge limitations in unrelated health/wellness
+answers. When it IS relevant, phrase it naturally and briefly, e.g.:
+"That may have changed since I last had information on it — it's best to
+check a current, reliable source for the latest details."
+Avoid saying things like "my knowledge cutoff is [date]" — just be
+naturally honest that things may have changed, without dwelling on it.
 
 MEDICAL SAFETY — CORE RULES:
 - Provide general educational health and wellness information only
@@ -70,7 +75,13 @@ professional medical advice.
 
 
 def get_ai_response(conversation_history: list) -> str:
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}] + conversation_history
+    """
+    conversation_history: list of dicts like
+    [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]
+    """
+    today = datetime.now().strftime("%B %d, %Y")
+    dynamic_prompt = SYSTEM_PROMPT + f"\n\nToday's date is {today}."
+    messages = [{"role": "system", "content": dynamic_prompt}] + conversation_history
 
     response = client.chat.completions.create(
         model=MODEL_NAME,
