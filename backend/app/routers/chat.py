@@ -33,6 +33,9 @@ def chat(
     if not chat_request.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
 
+    if len(chat_request.message) > 1000:
+        raise HTTPException(status_code=400, detail="Message is too long (max 1000 characters)")
+
     user_message = Message(
         session_id=chat_request.session_id,
         sender="user",

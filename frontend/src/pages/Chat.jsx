@@ -91,6 +91,10 @@ function Chat() {
   const handleSend = async (overrideText) => {
     const textToSend = overrideText ?? inputText;
     if (!textToSend.trim() || !currentSessionId) return;
+    if (textToSend.length > 1000) {
+      setError("Your message is too long. Please keep it under 1000 characters.");
+      return;
+    }
 
     setInputText("");
     setSending(true);
@@ -108,20 +112,31 @@ function Chat() {
         message: textToSend,
       });
 
-      const aiMessage = {
+            const aiMessage = {
         id: response.data.ai_message_id,
         sender: "ai",
         content: response.data.ai_response,
       };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (err) {
-      setError("Failed to send message. Please try again.");
-    } finally {
-      setSending(false);
+      // Remove the optimistic user message since it never got a reply
+      setMessages((prev) => prev.filter((m) => m.id !== tempUserMessage.id));
+
+      if (err.code === "ECONNABORTED") {
+        setError("The request timed out. Please try again.");
+      } else if (!err.response) {
+        setError("Network error — please check your internet connection and try again.");
+      } else if (err.response.status === 502) {
+        setError("The AI service is temporarily unavailable. Please try again in a moment.");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+      } finally {
+        setSending(false);
     }
   };
 
-  if (error) {
+    if (error === "Not authorized. Please login again.") {
     return (
       <div className="chat-page">
         <p style={{ margin: "50px", color: "#f87171" }}>{error}</p>
@@ -139,7 +154,35 @@ function Chat() {
 
   return (
     <div className="chat-page">
-      <Navbar onNewChat={handleNewChat} />
+            <Navbar onNewChat={handleNewChat} />
+
+      {error && (
+        <div
+          style={{
+            background: "#2a1418",
+            border: "1px solid #5c2530",
+            color: "#f87171",
+            padding: "10px 20px",
+            fontSize: "13px",
+            textAlign: "center",
+          }}
+        >
+          {error}{" "}
+          <button
+            onClick={() => setError("")}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#f87171",
+              textDecoration: "underline",
+              cursor: "pointer",
+              marginLeft: "8px",
+            }}
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       <div className="chat-layout">
         {/* Sidebar */}
@@ -159,7 +202,7 @@ function Chat() {
         {/* Main chat area */}
         <div className="chat-main">
           <div className="chat-main-inner">
-            <h4>Session #{currentSessionId}</h4>
+            <h4>Chat #{currentSessionId}</h4>
 
             <div className="chat-messages">
               {messages.length === 0 && (
@@ -198,7 +241,16 @@ function Chat() {
                   </div>
                 </div>
               ))}
-              {sending && <p className="chat-typing">MindBot is typing...</p>}
+                            {sending && (
+                <p className="chat-typing">
+                  Generating response
+                  <span className="chat-typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </span>
+                </p>
+              )}
               <div ref={messagesEndRef} />
             </div>
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import "../styles/admin.css";
@@ -8,6 +9,7 @@ function Admin() {
   const [topics, setTopics] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadData();
@@ -63,7 +65,22 @@ function Admin() {
     <div className="admin-page">
       <Navbar onNewChat={() => {}} />
 
-      <div className="admin-content">
+            <div className="admin-content">
+        <button
+          onClick={() => navigate("/chat")}
+          style={{
+            background: "#131c26",
+            border: "1px solid #263344",
+            color: "#cdd6dd",
+            padding: "8px 16px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            marginBottom: "20px",
+            fontSize: "13px",
+          }}
+        >
+          ← Back to Chat
+        </button>
         <h2>Admin Analytics</h2>
 
         <div className="admin-stats-grid">
